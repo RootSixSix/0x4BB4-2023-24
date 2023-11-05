@@ -32,24 +32,6 @@ public class MecanumDriveSample extends OpMode {
     boolean turboMode = false;
     double rotationMultiplicative = 0.75;
 
-    /*
-     * These are the variables used to ramp the power
-     * to the motors up and down.  The curr_ variables
-     * are the current power to the respective motors.
-     * After calculating the powers based on the controller's
-     * sticks, we compare the calculated power to the
-     * curr_ power and, if the calculated power is
-     * greater than the curr_ power, we add accel to
-     * the curr_ power; otherwise, we subtract deccel
-     * from the curr_ power.  This should reduce wheel
-     * spin on acceleration and skid from decelleration.
-     */
-    double accel = 0.02;
-    double deccel = 0.02;
-    double curr_leftFrontPower  = 0;
-    double curr_rightFrontPower = 0;
-    double curr_leftBackPower   = 0;
-    double curr_rightBackPower  = 0;
 
     @Override
     public void init() {
@@ -103,55 +85,41 @@ public class MecanumDriveSample extends OpMode {
         double rightFrontPower = drive - strafe - (rotationMultiplicative*twist);
         double leftBackPower   = drive - strafe + (rotationMultiplicative*twist);
         double rightBackPower  = drive + strafe - (rotationMultiplicative*twist);
-
-        if (leftFrontPower > curr_leftFrontPower) {
-            curr_leftFrontPower += accel;
-        } else {
-            curr_leftFrontPower -= deccel;
-        }
-        if (rightFrontPower > curr_rightFrontPower) {
-            curr_rightFrontPower += accel;
-        } else {
-            curr_rightFrontPower -= deccel;
-        }
-        if (leftBackPower >  curr_leftBackPower) {
-            curr_leftBackPower += accel;
-        } else {
-            curr_leftBackPower -= deccel;
-        }
-        if (rightBackPower > curr_rightBackPower) {
-            curr_rightBackPower += accel;
-        } else {
-            curr_rightBackPower -= deccel;
-        }
-
         double max;
-        max = Math.max(Math.abs(curr_leftFrontPower), Math.abs(curr_rightFrontPower));
-        max = Math.max(max, Math.abs(curr_leftBackPower));
-        max = Math.max(max, Math.abs(curr_rightBackPower));
+        max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
 
         if (max > 1.0) {
-            curr_leftFrontPower  /= max;
-            curr_rightFrontPower /= max;
-            curr_leftBackPower   /= max;
-            curr_rightBackPower  /= max;
-        }
-
-/*
-       This was in here twice.  Commented out 11/4/23
-
-       if (max > 1.0) {
             leftFrontPower  /= max;
             rightFrontPower /= max;
             leftBackPower   /= max;
             rightBackPower  /= max;
         }
-*/
 
-        front_left.setPower(driveMultiplicative*curr_leftFrontPower);
-        front_right.setPower(driveMultiplicative*curr_rightFrontPower);
-        back_left.setPower(driveMultiplicative*curr_leftBackPower);
-        back_right.setPower(driveMultiplicative*curr_rightBackPower);
+        // Because we are adding vectors and motors only take values between
+        // [-1,1] we may need to normalize them.
+
+        // Loop through all values in the speeds[] array and find the greatest
+        // *magnitude*.  Not the greatest velocity.
+
+        // apply the calculated values to the motors.
+
+ /*       if(gamepad1.right_bumper){
+            if(turboMode = false){
+                turboMode = true;
+                driveMultiplicative = 1;
+            }
+            if(turboMode = true){
+                turboMode = false;
+                driveMultiplicative = 0.7;
+            }
+        }*/
+
+        front_left.setPower(driveMultiplicative*leftFrontPower);
+        front_right.setPower(driveMultiplicative*rightFrontPower);
+        back_left.setPower(driveMultiplicative*leftBackPower);
+        back_right.setPower(driveMultiplicative*rightBackPower);
 
 
 
