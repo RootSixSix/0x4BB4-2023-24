@@ -42,7 +42,7 @@ public class MecanumDriveSample extends OpMode {
      * greater than the curr_ power, we add accel to
      * the curr_ power; otherwise, we subtract deccel
      * from the curr_ power.  This should reduce wheel
-     * spin on acceleration and skid from deccelleration.
+     * spin on acceleration and skid from decelleration.
      */
     double accel = 0.02;
     double deccel = 0.02;
