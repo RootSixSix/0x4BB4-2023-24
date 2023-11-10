@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="AutoSample", group="19380")
-public class AutoSample extends LinearOpMode {
+import kotlin.NotImplementedError;
+
+//@Autonomous(name="AutoSample", group="19380")
+public class AutoDriveBase extends LinearOpMode {
 
     /*
      * The mecanum drivetrain involves four separate motors that spin in
@@ -19,6 +20,10 @@ public class AutoSample extends LinearOpMode {
     private DcMotor front_right = null;
     private DcMotor back_left   = null;
     private DcMotor back_right  = null;
+
+    public DriveData[] getData() {
+        throw new NotImplementedError();
+    }
 
     @Override
     public void runOpMode() {
@@ -33,7 +38,14 @@ public class AutoSample extends LinearOpMode {
         back_left.setDirection(DcMotor.Direction.REVERSE);
         front_right.setDirection(DcMotor.Direction.FORWARD);
         back_right.setDirection(DcMotor.Direction.FORWARD);
-        drive(1, 0.8, 0.8, 0.8, 0.8);
+
+        for (DriveData d : getData()) {
+            drive(d);
+        }
+    }
+
+    private void drive(DriveData data) {
+        drive(data.getDurationSecs(), data.getFrontLeftPower(), data.getFrontRightPower(), data.getBackLeftPower(), data.getBackRightPower());
     }
 
     private void drive(double duration, double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
