@@ -15,6 +15,21 @@ public class DriveData {
         this.backRightPower = backRightPower;
     }
 
+    static DriveData forward(double durationSecs, double power) {
+        return new DriveData(durationSecs, power, power, power, power);
+    }
+    static DriveData back(double durationSecs, double power) {
+        return new DriveData(durationSecs, -power, -power, -power,-power);
+    }
+    static DriveData strafeLeft(double durationSecs, double power) {
+        return new DriveData(durationSecs, power, -power, -power, power);
+    }
+    static DriveData strafeRight(double durationSecs, double power) {
+        return new DriveData(durationSecs, -power, power, power, -power);
+    }
+
+
+
     public double getDurationSecs() {
         return durationSecs;
     }
